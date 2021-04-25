@@ -5,6 +5,6 @@
 
 <mapper namespace="kr.kjy.mapper.TimeMapper">
 	<select id = "getTime2" resultType="string">
-		select id from member where id = 'admin'
+		select sysdate()
 	</select>
 </mapper>

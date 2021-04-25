@@ -25,7 +25,7 @@
 	</bean>
 	
 	<mybatis-spring:scan base-package="kr.kjy.mapper"/>
-	<context:component-scan base-package="kr.kjy.sample"></context:component-scan>
+	<context:component-scan base-package="kr.kjy.myapp"></context:component-scan>
 
 </beans>
 
