@@ -28,6 +28,7 @@
 	<context:component-scan base-package="kr.kjy.myapp"></context:component-scan>
 	<context:component-scan base-package="kr.kjy.exception"></context:component-scan>
 	<context:component-scan base-package="kr.kjy.service"></context:component-scan>
+	<context:component-scan base-package="kr.kjy.controller"></context:component-scan>
 </beans>
 
 

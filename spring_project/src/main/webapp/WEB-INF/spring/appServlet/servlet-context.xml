@@ -30,7 +30,7 @@
 	</beans:bean>
 		
 	<context:component-scan base-package="kr.kjy.myapp" />
-	
+	<context:component-scan base-package="kr.kjy.controller" />
 	
 	
 </beans:beans>

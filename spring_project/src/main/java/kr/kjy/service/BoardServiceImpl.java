@@ -20,7 +20,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void register(BoardVO vo) {
-		mapper.BoardInsert(vo);
+		mapper.BoardInsertSelectKey(vo);
 	}
 
 	@Override
