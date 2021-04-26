@@ -32,7 +32,7 @@
                                 <c:forEach items = "${boardList}" var = "board">
                                     <tr class="odd gradeX">
                                         <td>${board.bno}</td>
-                                        <td>${board.title}</td>
+                                        <td><a href='/board/get?bno=<c:out value="${board.bno}"/>'>${board.title}</a></td>
                                         <td>${board.writer}</td>
                                         <td><fmt:formatDate pattern = "yyyy-MM-dd" value = "${board.regdate}"/></td>
                                         <td><fmt:formatDate pattern = "yyyy-MM-dd" value = "${board.updatedate}"/></td>
@@ -78,12 +78,18 @@
 		
 		checkModal(result);
 		
+		/* 브라우저에 저장된 데이터 초기화(뒤로가기 문제 해결) */
+		history.replaceState({}, null, null);	
+		
 		function checkModal(result){
-			if (result === ''){
+			if (result === '' || history.state){
 				return;
 			}
+			
 			if (parseInt(result) > 0){
-				 document.getElementById("modal-text").innerText = "게시글" + parseInt(result) + "번이 등록되었습니다."
+				 document.getElementById("modal-text").innerText = "게시글" + parseInt(result) + "번이 등록되었습니다.";
+			}else if (result === 'success'){
+				 document.getElementById("modal-text").innerText = "정상적으로 처리 되었습니다.";
 			}
 			$("#myModal").modal("show");
 		}
