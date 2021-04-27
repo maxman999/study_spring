@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import kr.kjy.mapper.BoardMapper;
 import kr.kjy.model.BoardVO;
+import kr.kjy.model.Criteria;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j;
@@ -41,6 +42,16 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardVO> getList() {
 		return mapper.getBoardList();
+	}
+
+	@Override
+	public List<BoardVO> getList(Criteria cri) {
+		return mapper.getListWithPaging(cri);
+	}
+
+	@Override
+	public int getTotal(Criteria cri) {
+		return mapper.getTotalCount(cri);
 	}
 	
 }

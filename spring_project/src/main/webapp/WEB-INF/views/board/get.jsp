@@ -33,8 +33,14 @@
                                	<label>Writer</label>
                                	<input class="form-control" name = "writer" readonly = "readonly" value='<c:out value = "${board.writer}" />'>
                              </div>
-                               	<button type="submit" class="btn btn-default"><a href = '/board/list'>List</a></button>
-                                <button type="reset" class="btn btn-default"><a href = '/board/modify?bno=<c:out value = "${board.bno}"/>' >Modify</a></button>
+                             	 <form id = "actionForm" action="/board/list" method="get">
+                            		<input type="hidden" name = "pageNum" value = "${cri.pageNum}">
+                            		<input type="hidden" name = "amaunt" value = "${cri.amount}">
+                            		<input type="hidden" name = "startNum" value = "${cri.startNum}">
+                            		<input type="hidden" name = "bno" value = "${board.bno}">
+                           		</form>
+                               	<button type="button" class="btn btn-default listBtn"><a href = '/board/list'>List</a></button>
+                                <button type="button" class="btn btn-default modifyBtn"><a href = '/board/modify?bno=<c:out value = "${board.bno}"/>' >Modify</a></button>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -43,4 +49,22 @@
                 <!-- /.col-lg-12 -->
             </div>
           		  </div>
+<script>
+window.onload = function(){
+	
+	let actionForm = $("#actionForm")
+	$(".listBtn").click(function(e){
+		e.preventDefault();	
+		actionForm.find("input[name = 'bno']").remove();
+		actionForm.submit();
+	})
+	$(".modifyBtn").click(function(e){
+		e.preventDefault();	
+		actionForm.attr("action", "/board/modify");
+		actionForm.submit();
+	})
+	
+	
+};
+</script>
 <%@ include file="../includes/footer.jsp" %>

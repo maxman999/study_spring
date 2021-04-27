@@ -24,4 +24,12 @@ update tbl_board
 set title= '1', content = '2', writer = '3', updatedate = NOW()
 where bno = 2;
 
-select * from tbl_board
+select rownum ,bno from tbl_board order by bno desc
+
+/* 페이징 처리를 위한  Limit 구문*/
+SELECT *
+FROM tbl_board
+ORDER BY bno
+LIMIT 0, 10;
+
+select count(bno) from tbl_board

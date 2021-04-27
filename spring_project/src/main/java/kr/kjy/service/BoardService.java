@@ -3,6 +3,7 @@ package kr.kjy.service;
 import java.util.List;
 
 import kr.kjy.model.BoardVO;
+import kr.kjy.model.Criteria;
 
 public interface BoardService {
 	
@@ -11,4 +12,6 @@ public interface BoardService {
 	int modify(BoardVO vo);
 	int remove(Long bno);
 	List<BoardVO> getList();
+	List<BoardVO> getList(Criteria cri);
+	int getTotal(Criteria cri);
 }

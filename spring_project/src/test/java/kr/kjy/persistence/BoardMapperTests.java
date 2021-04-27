@@ -1,5 +1,7 @@
 package kr.kjy.persistence;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import kr.kjy.mapper.BoardMapper;
 import kr.kjy.model.BoardVO;
+import kr.kjy.model.Criteria;
+import kr.kjy.model.PageDTO;
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -78,6 +82,42 @@ public class BoardMapperTests {
 		log.info("-------------------------");
 		int count = boardMapper.BoardUpdate(vo);
 		log.info(count);
+	}
+	
+	@Test
+	public void dbTest() {
+		
+		BoardVO vo = new BoardVO();
+		vo.setTitle("test 테스트");
+		vo.setContent("content 테스트");
+		vo.setWriter("writer 테스트");
+		int i = 0;
+		
+		for( i = 0 ; i < 5000 ; i++ ) {
+		boardMapper.BoardInsert(vo);
+		i++;
+		}
+		log.info("-------------------------");
+		log.info(i + "개 삽입 완료");
+		log.info("-------------------------");
+	}
+	
+	@Test
+	public void testPaging() {
+		Criteria cri = new Criteria();
+		log.info(cri);
+		log.info("--------------------");
+		List<BoardVO> list = boardMapper.getListWithPaging(cri);
+		list.forEach(b -> log.info(b));
+	}
+	
+	@Test
+	public void testPageDTO() {
+		Criteria cri = new Criteria();
+		cri.setStartNum(243);
+		PageDTO pagedto = new PageDTO(cri,250);
+		log.info(pagedto);
+		
 	}
 	
 }

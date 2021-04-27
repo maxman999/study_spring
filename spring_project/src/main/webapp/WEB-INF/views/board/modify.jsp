@@ -18,26 +18,29 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                         	<form>
-                       		 <div class="form-group">	
-                                <label>BNO</label>
-                                <input class="form-control" name = "bno" readonly = "readonly" value = '<c:out value = "${board.bno}" />'>
-                             </div>
-							 <div class="form-group">	
-                                <label>Title</label>
-                                <input class="form-control" name = "title" value = '<c:out value = "${board.title}" />'>
-                             </div>
-                             <div class="form-group">
-                             	<label>Content</label>
-                                <textarea class="form-control" name = "content" rows="5" cols="50"><c:out value = "${board.content}" /></textarea>
-                             </div>
-                             <div class="form-group">
-                               	<label>Writer</label>
-                               	<input class="form-control" name = "writer" readonly = "readonly" value='<c:out value = "${board.writer}" />'>
-                             </div>
-                             	<!-- data-oper : 커스텀 데이터 속성  -->
-                               	<button class="btn btn-default" data-oper = 'modify'>Modify</button>
-                                <button class="btn btn-danger" data-oper = 'remove'>Remove</button>
-                        		<button class="btn btn-info" data-oper = 'list'>List</button>
+	                       		<input type="hidden" name = 'pageNum' value = "${cri.pageNum}">  	
+	                        	<input type="hidden" name = 'amount' value = "${cri.amount}"> 
+	                        	<input type="hidden" name = 'startNum' value = "${cri.startNum}">  
+	                      		<div class="form-group">	
+	                               <label>BNO</label>
+	                               <input class="form-control" name = "bno" readonly = "readonly" value = '<c:out value = "${board.bno}" />'>
+	                            </div>
+		                        <div class="form-group">	
+	                               <label>Title</label>
+	                               <input class="form-control" name = "title" value = '<c:out value = "${board.title}" />'>
+	                            </div>
+	                            <div class="form-group">
+	                            	<label>Content</label>
+	                               <textarea class="form-control" name = "content" rows="5" cols="50"><c:out value = "${board.content}" /></textarea>
+	                            </div>
+	                            <div class="form-group">
+	                              	<label>Writer</label>
+	                              	<input class="form-control" name = "writer" readonly = "readonly" value='<c:out value = "${board.writer}" />'>
+	                            </div>
+	                            	<!-- data-oper : 커스텀 데이터 속성  -->
+	                               	<button class="btn btn-default" data-oper = 'modify'>Modify</button>
+	                                <button class="btn btn-danger" data-oper = 'remove'>Remove</button>
+	                        		<button class="btn btn-info" data-oper = 'list'>List</button>
                         	</form>
                         </div>
                         <!-- /.panel-body -->

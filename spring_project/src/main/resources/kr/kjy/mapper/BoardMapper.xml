@@ -33,4 +33,13 @@
 		set title= #{title}, content= #{content}, writer=#{writer}, updatedate = NOW()
 		where bno = #{bno}
 	</update>
+	<select id="getListWithPaging" resultType="kr.kjy.model.BoardVO">
+		select *
+		from tbl_board
+		order by bno desc
+		limit #{startNum}, #{amount};	
+	</select>
+	<select id="getTotalCount" resultType="int">
+		select count(bno) from tbl_board
+	</select>
 </mapper>

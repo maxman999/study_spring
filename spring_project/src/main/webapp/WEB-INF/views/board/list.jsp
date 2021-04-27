@@ -32,7 +32,7 @@
                                 <c:forEach items = "${boardList}" var = "board">
                                     <tr class="odd gradeX">
                                         <td>${board.bno}</td>
-                                        <td><a href='/board/get?bno=<c:out value="${board.bno}"/>'>${board.title}</a></td>
+                                        <td><a class = 'move' href= '<c:out value="${board.bno}"/>'>${board.title}</a></td>
                                         <td>${board.writer}</td>
                                         <td><fmt:formatDate pattern = "yyyy-MM-dd" value = "${board.regdate}"/></td>
                                         <td><fmt:formatDate pattern = "yyyy-MM-dd" value = "${board.updatedate}"/></td>
@@ -41,8 +41,30 @@
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
-                        </div>
-                        <!-- /.panel-body -->
+                            <div class = 'pull-right'>
+                            	<ul class="pagination">
+                            		<c:if test="${pageMaker.prev}">
+	                            		<li class="page-item">
+	     								 	<a class="page-link" href="${pageMaker.startPage - 1}" tabindex="-1">Previous</a>
+	  									</li>
+  									</c:if>
+                            		<c:forEach begin="${pageMaker.startPage}" end = "${pageMaker.endPage}" var = "num">
+                            			<li class="page-item ${pageMaker.cri.pageNum == num?"active":""}"><a class="page-link" href="${num}">${num}</a></li>
+                            		</c:forEach>
+                            		<c:if test="${pageMaker.next}">
+	                            		<li class="page-item">
+									      <a class="page-link" href="${pageMaker.endPage + 1}" tabindex="-1">Next</a>
+									    </li>
+								    </c:if>
+                            	</ul>
+                            </div>
+                            <form id = "actionForm" action="/board/list" method="get">
+                            	<input type="hidden" name = "pageNum" value = "${pageMaker.cri.pageNum}">
+                            	<input type="hidden" name = "amaunt" value = "${pageMaker.cri.amount}">
+                            	<input type="hidden" name = "startNum" value = "${pageMaker.cri.startNum}">
+                            </form>
+                        </div> 
+                        <!-- /.panel-body -->	
                     </div>
                     <!-- /.panel -->
                 </div>
@@ -97,6 +119,27 @@
 		document.getElementById("regBtn").addEventListener('click', () => {
 			location.href="/board/register";
 		});
+		
+		let actionForm = $("#actionForm");
+		$(".page-link").on("click", function(e){
+			e.preventDefault();
+			let targetPage = $(this).attr("href");
+			console.log(targetPage);
+			actionForm.find("input[name='pageNum']").val(targetPage);
+			actionForm.find("input[name='startNum']").val((targetPage-1)*10);
+			actionForm.submit();
+		});
+		
+		/* 게시물을 조회 했을 때 해당 게시글의 위치를 url에 따라 붙게 해주는 작업.  */
+		$(".move").on("click", function(e){
+			e.preventDefault();
+			var targetBno = $(this).attr("href");
+			console.log(targetBno);
+			actionForm.append("<input type = 'hidden' name = 'bno' value = '" + targetBno + "'>'" );
+			actionForm.attr("action", "/board/get")
+			actionForm.submit();
+		})
+		
 	};
 </script>
           		  
