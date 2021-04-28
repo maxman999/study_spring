@@ -41,6 +41,21 @@
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
+                            <form id = 'searchForm' action="/board/list" method="get">
+                            	<select name = "type">
+                            		<option value = "" ${pageMaker.cri.type == null? "selected" : "" }>----</option>
+                            		<option value = "T" ${pageMaker.cri.type eq 'T'? "selected" : "" }>제목</option>
+                            		<option value = "C" ${pageMaker.cri.type eq 'C'? "selected" : "" }>내용</option>
+                            		<option value = "W" ${pageMaker.cri.type eq 'W'? "selected" : "" }>작성자</option>
+                            		<option value = "TC" ${pageMaker.cri.type eq 'TC'? "selected" : "" }>제목/내용</option>
+                            		<option value = "TCW" ${pageMaker.cri.type eq 'TCW'? "selected" : "" }>제목/내용/작성자</option>
+                            	</select>
+                            	<input type = "text" name = 'keyword' value = ${pageMaker.cri.keyword}>
+                            	<input type="hidden" name = "pageNum" value = "${pageMaker.cri.pageNum}">
+                            	<input type="hidden" name = "amaunt" value = "${pageMaker.cri.amount}">
+                            	<input type="hidden" name = "startNum" value = "${pageMaker.cri.startNum}">
+                            	<button class = 'btn btn-default'>search</button> 
+                            </form>
                             <div class = 'pull-right'>
                             	<ul class="pagination">
                             		<c:if test="${pageMaker.prev}">
@@ -62,6 +77,8 @@
                             	<input type="hidden" name = "pageNum" value = "${pageMaker.cri.pageNum}">
                             	<input type="hidden" name = "amaunt" value = "${pageMaker.cri.amount}">
                             	<input type="hidden" name = "startNum" value = "${pageMaker.cri.startNum}">
+                            	<input type="hidden" name = "type" value = "${pageMaker.cri.type}">
+                            	<input type="hidden" name = "keyword" value = "${pageMaker.cri.keyword}">
                             </form>
                         </div> 
                         <!-- /.panel-body -->	
@@ -140,6 +157,14 @@
 			actionForm.submit();
 		})
 		
+		
+		var searchForm = $("#searchForm");
+		$("#searchForm button").on("click", function(e){
+			e.preventDefault();
+			searchForm.find("input[name='pageNum']").val(1);
+			searchForm.submit();
+		})
+	
 	};
 </script>
           		  

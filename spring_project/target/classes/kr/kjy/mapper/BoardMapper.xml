@@ -9,13 +9,13 @@
 	<sql id = "criteria">
 		<trim prefix="AND">
 		<foreach collection="typeArr" item ="type" separator="or">
-			<if test = "type == 't'.toString()">
+			<if test = "type == 'T'.toString()">
 				title like "%"#{keyword}"%"				
 			</if>
-			<if test = "type == 'c'.toString()">
+			<if test = "type == 'C'.toString()">
 				content like "%"#{keyword}"%"				
 			</if>
-			<if test = "type == 'w'.toString()">
+			<if test = "type == 'W'.toString()">
 				writer like "%"#{keyword}"%"	
 			</if>
 		</foreach>
