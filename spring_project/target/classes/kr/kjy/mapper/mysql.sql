@@ -32,4 +32,32 @@ FROM tbl_board
 ORDER BY bno
 LIMIT 0, 10;
 
+/* 동적 SQL로 검색 처리를 하기 위한  구문*/
+select *
+from tbl_board
+where title like "%등록%"
+order by bno
+LIMIT 0,10;
+
+select *
+		from tbl_board
+		where bno > 0
+		<trim prefix="AND">
+		<foreach collection="typeArr" item ="type">
+			<if test = "type == 't'.toString()">
+				title like #{keyword}				
+			</if>
+			<if test = "type == 'c'.toString()">
+				content like #{keyword}				
+			</if>
+			<if test = "type == 'w'.toString()">
+				writer like #{keyword}	
+			</if>
+		</foreach>
+		</trim>
+		order by bno desc
+		limit #{startNum}, #{amount};
+
+
+
 select count(bno) from tbl_board

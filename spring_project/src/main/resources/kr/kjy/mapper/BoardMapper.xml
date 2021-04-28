@@ -4,13 +4,34 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.kjy.mapper.BoardMapper">
+	
+	<!-- 중복되는 SQL문을 include 해서 쓰는 방법.  -->
+	<sql id = "criteria">
+		<trim prefix="AND">
+		<foreach collection="typeArr" item ="type" separator="or">
+			<if test = "type == 't'.toString()">
+				title like "%"#{keyword}"%"				
+			</if>
+			<if test = "type == 'c'.toString()">
+				content like "%"#{keyword}"%"				
+			</if>
+			<if test = "type == 'w'.toString()">
+				writer like "%"#{keyword}"%"	
+			</if>
+		</foreach>
+		</trim>
+	</sql>
+	
+	
 	<select id = "getBoardList" resultType="kr.kjy.model.BoardVO">
 		select * from tbl_board order by bno desc
 	</select>
+	
 	<insert id = "BoardInsert">
 		insert into tbl_board(title,content,writer)
 		values(#{title},#{content},#{writer})
 	</insert>
+	
 	<!-- 새로 생성된 게시글의 시퀀스 번호를 가져오는 코드. 낭비가 심한 코드니 주의! -->
 	<insert id = "BoardInsertSelectKey">
 		<selectKey order="BEFORE" keyProperty="bno" resultType = "Long">
@@ -22,24 +43,34 @@
 		insert into tbl_board(bno,title,content,writer)
 		values(#{bno},#{title},#{content},#{writer})
 	</insert>
+	
 	<select id="BoardRead" resultType="kr.kjy.model.BoardVO">
 		select * from tbl_board where bno = #{bno}
 	</select>
+	
 	<delete id="BoardDelete">
 		delete from tbl_board where bno = #{bno}
 	</delete>
+	
 	<update id="BoardUpdate">
 		update tbl_board
 		set title= #{title}, content= #{content}, writer=#{writer}, updatedate = NOW()
 		where bno = #{bno}
 	</update>
+	
+	
 	<select id="getListWithPaging" resultType="kr.kjy.model.BoardVO">
 		select *
 		from tbl_board
+		where bno > 0
+		<include refid="criteria"></include>
 		order by bno desc
-		limit #{startNum}, #{amount};	
+		limit #{startNum}, #{amount};
 	</select>
+	
 	<select id="getTotalCount" resultType="int">
 		select count(bno) from tbl_board
+		where bno > 0
+		<include refid="criteria"></include>
 	</select>
 </mapper>

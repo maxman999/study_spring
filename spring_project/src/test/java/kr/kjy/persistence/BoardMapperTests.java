@@ -120,4 +120,14 @@ public class BoardMapperTests {
 		
 	}
 	
+	@Test
+	public void testSearchPaging() {
+		//1 10
+		Criteria cri = new Criteria();
+		cri.setType("tcw");
+		cri.setKeyword("등록");
+		List<BoardVO> list = boardMapper.getListWithPaging(cri);
+		list.forEach(b -> log.info(b));
+	}
+	
 }
