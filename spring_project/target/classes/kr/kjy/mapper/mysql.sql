@@ -1,6 +1,7 @@
 select sysdate();
 
 drop table tbl_board
+drop table tbl_reply
 
 create table tbl_board(
 	bno int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -11,8 +12,26 @@ create table tbl_board(
 	updatedate datetime DEFAULT CURRENT_TIMESTAMP not null
 	);
 
+	
+create table tbl_reply(
+	rno int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	bno int(10) not null,
+	reply varchar(1000) not null,
+	replyer varchar(50) not null,
+	replyDate datetime DEFAULT CURRENT_TIMESTAMP not null,
+	replyUpdatedate datetime DEFAULT CURRENT_TIMESTAMP not null,
+	FOREIGN KEY (bno) REFERENCES tbl_board (bno)
+);	
+	
+select * from tbl_reply
+
+	
 insert into tbl_board(title,content,writer)
 values('테스트 제목','테스트 내용','테스트 유저');
+
+insert into tbl_reply (bno,reply,replyer)
+values(#{bno},#{reply},#{replyer})
+
 
 /* AUTO_INCREMENT 다음 숫자 가져오기 */
 SELECT AUTO_INCREMENT
@@ -35,7 +54,7 @@ LIMIT 0, 10;
 /* 동적 SQL로 검색 처리를 하기 위한  구문*/
 select *
 from tbl_board
-where title like "%등록%"
+where title like "%"'등록'"%"
 order by bno
 LIMIT 0,10;
 
