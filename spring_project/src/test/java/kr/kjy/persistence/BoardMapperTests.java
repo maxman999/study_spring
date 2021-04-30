@@ -38,6 +38,7 @@ public class BoardMapperTests {
 		vo.setWriter("writer 테스트");
 		
 		boardMapper.BoardInsert(vo);
+		
 		log.info("-------------------------");
 		log.info(boardMapper.getBoardList());
 		log.info("after insert => " + vo.getBno());
@@ -93,9 +94,8 @@ public class BoardMapperTests {
 		vo.setWriter("writer 테스트");
 		int i = 0;
 		
-		for( i = 0 ; i < 5000 ; i++ ) {
+		for( i = 0 ; i < 1000 ; i++ ) {
 		boardMapper.BoardInsert(vo);
-		i++;
 		}
 		log.info("-------------------------");
 		log.info(i + "개 삽입 완료");

@@ -12,7 +12,6 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j;
 
 @Service
-@Log4j
 @RequiredArgsConstructor
 @ToString
 public class BoardServiceImpl implements BoardService {

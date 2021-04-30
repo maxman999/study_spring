@@ -18,13 +18,13 @@ create table tbl_reply(
 	bno int(10) not null,
 	reply varchar(1000) not null,
 	replyer varchar(50) not null,
-	replyDate datetime DEFAULT CURRENT_TIMESTAMP not null,
-	replyUpdatedate datetime DEFAULT CURRENT_TIMESTAMP not null,
+	replydate datetime DEFAULT CURRENT_TIMESTAMP not null,
+	replyupdatedate datetime DEFAULT CURRENT_TIMESTAMP not null,
 	FOREIGN KEY (bno) REFERENCES tbl_board (bno)
 );	
 	
 select * from tbl_reply
-
+	
 	
 insert into tbl_board(title,content,writer)
 values('테스트 제목','테스트 내용','테스트 유저');
@@ -78,5 +78,6 @@ select *
 		limit #{startNum}, #{amount};
 
 
-
+select * from tbl_reply where bno = #{}
+		
 select count(bno) from tbl_board

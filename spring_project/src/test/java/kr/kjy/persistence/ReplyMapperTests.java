@@ -1,5 +1,7 @@
 package kr.kjy.persistence;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import kr.kjy.mapper.ReplyMapper;
+import kr.kjy.model.Criteria;
 import kr.kjy.model.ReplyVO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -27,11 +30,38 @@ public class ReplyMapperTests {
 	@Test
 	public void testInsert() {
 		ReplyVO vo = new ReplyVO();
-		vo.setBno(20L);
+		vo.setBno(2500L);
 		vo.setReply("테스트 리플");
 		vo.setReplyer("테스터");
+		for (int i = 0 ; i < 20 ; i++ ) {
 		log.info(mapper.insert(vo));
-		
+		}
+	}
+	
+	@Test
+	public void testRead() {
+		log.info(mapper.read(39L));
+	}
+	
+	@Test
+	public void testDelete() {
+		log.info(mapper.delete(38L));
+	}
+	
+	
+	@Test
+	public void testUpdate() {
+		Long targetRno = 38L;
+		ReplyVO vo = mapper.read(targetRno);
+		vo.setReply("수정 테스트");
+		log.info(mapper.update(vo));
+	}
+	
+	@Test
+	public void testList() {
+		Criteria cri = new Criteria();
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 5002L);
+		replies.forEach(reply -> log.info(reply));
 	}
 	
 	
