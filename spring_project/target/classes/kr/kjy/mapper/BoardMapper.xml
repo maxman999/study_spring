@@ -5,7 +5,7 @@
 
 <mapper namespace="kr.kjy.mapper.BoardMapper">
 	
-	<!-- 중복되는 SQL문을 include 해서 쓰는 방법.  -->
+	<!-- 중복되는 SQL문을 include 해서 쓰는 방법. 인라인 뷰  -->
 	<sql id = "criteria">
 		<trim prefix="AND">
 		<foreach collection="typeArr" item ="type" separator="or">
@@ -73,4 +73,11 @@
 		where bno > 0
 		<include refid="criteria"></include>
 	</select>
+	<update id="updateReplyCnt">
+		update tbl_board
+		set replycnt = replycnt + #{amount}
+		where bno = #{bno}
+	</update>
+	
+	
 </mapper>

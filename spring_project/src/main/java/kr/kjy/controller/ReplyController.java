@@ -41,6 +41,9 @@ public class ReplyController {
 	
 	@GetMapping(value = "/pages/{bno}/{page}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity<ReplyPageDTO> getList(@PathVariable("page") int page, @PathVariable("bno") Long bno){
+		if(page < 0) {
+			page = 1;
+		}
 		Criteria cri = new Criteria((page-1)*10, 10, page); 
 		return new ResponseEntity<>(service.getListPage(cri, bno), HttpStatus.OK);
 	}

@@ -23,6 +23,14 @@ create table tbl_reply(
 	FOREIGN KEY (bno) REFERENCES tbl_board (bno)
 );	
 
+alter table tbl_board add (replycnt int default 0);
+
+update tbl_board 
+set replycnt = (select count(rno) from tbl_reply where tbl_reply.bno = tbl_board.bno);
+
+select * from tbl_board where bno = 2500;
+
+
 -- 인덱스 
 CREATE INDEX idx_reply ON tbl_reply (bno desc, rno asc);
 show index from tbl_reply
@@ -34,11 +42,6 @@ select /*+INDEX(tbl_reply idx_reply)*/
 	and rno > 0
 --
 	
-insert into tbl_board(title,content,writer)
-values('테스트 제목','테스트 내용','테스트 유저');
-
-insert into tbl_reply (bno,reply,replyer)
-values(#{bno},#{reply},#{replyer})
 
 
 /* AUTO_INCREMENT 다음 숫자 가져오기 */
@@ -46,12 +49,6 @@ SELECT AUTO_INCREMENT
 FROM information_schema.tables
 WHERE table_name = 'tbl_board'
 AND table_schema = DATABASE();
-
-update tbl_board
-set title= '1', content = '2', writer = '3', updatedate = NOW()
-where bno = 2;
-
-select rownum ,bno from tbl_board order by bno desc
 
 /* 페이징 처리를 위한  Limit 구문*/
 SELECT *
@@ -85,13 +82,7 @@ select *
 		order by bno desc
 		limit #{startNum}, #{amount};
 
-
-select * from tbl_reply where bno = 2500
-		
-select count(bno) from tbl_board
-
-
-select *
-from tbl_reply
-where bno = 2500
-LIMIT 0,10;
+-- 트랜잭션 예제 테이블
+create table tbl_sample1( col1 varchar(500));
+create table tbl_sample2( col2 varchar(50));
+drop table tbl_sample2
