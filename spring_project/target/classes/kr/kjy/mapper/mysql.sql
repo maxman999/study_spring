@@ -78,6 +78,6 @@ select *
 		limit #{startNum}, #{amount};
 
 
-select * from tbl_reply where bno = #{}
+select * from tbl_reply where bno = 2500
 		
 select count(bno) from tbl_board

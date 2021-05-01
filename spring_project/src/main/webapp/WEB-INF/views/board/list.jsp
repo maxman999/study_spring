@@ -50,7 +50,7 @@
                             		<option value = "TC" ${pageMaker.cri.type eq 'TC'? "selected" : "" }>제목/내용</option>
                             		<option value = "TCW" ${pageMaker.cri.type eq 'TCW'? "selected" : "" }>제목/내용/작성자</option>
                             	</select>
-                            	<input type = "text" name = 'keyword' value = ${pageMaker.cri.keyword}>
+                            	<input type = "text" name = 'keyword' value = "${pageMaker.cri.keyword}">
                             	<input type="hidden" name = "pageNum" value = "${pageMaker.cri.pageNum}">
                             	<input type="hidden" name = "amaunt" value = "${pageMaker.cri.amount}">
                             	<input type="hidden" name = "startNum" value = "${pageMaker.cri.startNum}">

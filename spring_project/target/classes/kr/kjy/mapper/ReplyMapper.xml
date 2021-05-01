@@ -18,7 +18,7 @@
 	</delete>
 	<update id="update">
 		update tbl_reply
-		set reply = #{reply}, replyer = #{replyer}, replyupdatedate = NOW()
+		set reply = #{reply}, replyupdatedate = NOW()
 		where rno = #{rno}
 	</update>
 	<select id="getListWithPaging" resultType="kr.kjy.model.ReplyVO">
