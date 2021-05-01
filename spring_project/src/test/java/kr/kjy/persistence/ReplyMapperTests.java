@@ -31,9 +31,9 @@ public class ReplyMapperTests {
 	public void testInsert() {
 		ReplyVO vo = new ReplyVO();
 		vo.setBno(2500L);
-		vo.setReply("테스트 리플");
 		vo.setReplyer("테스터");
-		for (int i = 0 ; i < 20 ; i++ ) {
+		for (int i = 0 ; i < 80 ; i++ ) {
+		vo.setReply("테스트 리플 " + i);
 		log.info(mapper.insert(vo));
 		}
 	}
@@ -64,6 +64,11 @@ public class ReplyMapperTests {
 		replies.forEach(reply -> log.info(reply));
 	}
 	
-	
+	@Test
+	public void testList2() {
+		Criteria cri = new Criteria(11,10,2);
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 2500L);
+		replies.forEach(reply -> log.info(reply));
+	}
 	
 }

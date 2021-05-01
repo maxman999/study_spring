@@ -76,6 +76,9 @@
             	            <!-- ./ end ul  -->
             			</div>
             			<!-- /.pannel .chat-pannel -->
+            			<div class = "panel-footer">
+            			
+            			</div>
             		</div>
 				</div>
 			</div>
@@ -129,7 +132,19 @@ $(document).ready(function(){
 	showList(1);
 	
 	function showList(page){
-		replyService.getList({bno:bnoValue, page:page||1}, function(list){
+		console.log("show list : " + page );
+		replyService.getList({bno:bnoValue, page:page||1}, function(replyCnt, list){
+			
+			console.log("replyCnt : " + replyCnt);
+			console.log("list : " + list );
+			console.log(list);
+			
+			if(page == -1){
+				pageNum = Math.ceil(replyCnt/10.0);
+				showList(pageNum);
+				return;	
+			}
+			
 			let str = "";
 			if(list == null || list.length == 0){
 				replyUL.html("");
@@ -142,8 +157,9 @@ $(document).ready(function(){
 				str += "	<p>"+list[i].reply + "</p></div></li>";
 			}
 			replyUL.html(str);
+			showReplyPage(replyCnt);
 			}); //end function
-		
+			
 	}//end showList
 	
 	let modal = $(".modal");
@@ -174,7 +190,7 @@ $(document).ready(function(){
 				modal.find("input").val("");
 				modal.modal("hide");
 				
-				showList(1);
+				showList(-1);
 			});
 		});
 	});
@@ -199,7 +215,7 @@ $(document).ready(function(){
 			replyService.update(reply, function(result){
 				alert(result);
 				modal.modal("hide");
-				showList(1);
+				showList(pageNum);
 			});
 		});
 		
@@ -208,7 +224,7 @@ $(document).ready(function(){
 			replyService.remove(rno,function(result){
 				alert(result);
 				modal.modal("hide");
-				showList(1);
+				showList(pageNum);
 			});
 		});
 		
@@ -216,8 +232,47 @@ $(document).ready(function(){
 		
 	});
 	
-	
-	
+	var pageNum = 1;
+	let replyPageFooter = $(".panel-footer");
+	function showReplyPage(replyCnt){
+		let endNum = Math.ceil(pageNum / 10.0) * 10;
+		let startNum = endNum - 9;
+		let prev = startNum != 1;
+		let next = false;
+		
+		if(endNum * 10 >= replyCnt){
+			endNum = Math.ceil((replyCnt)/10);
+		}
+		
+		if(endNum * 10 < replyCnt){
+			next = true;
+		}
+		
+		let str = "<ul class = 'pagination pull-right'>";
+		if (prev){
+			str += "<li class = 'page-item'><a class = 'page-link' href='"+(startNum-1)+"'>Previous</a></li>";
+		}
+		for (var i = startNum ; i <= endNum ; i++){
+			let active = pageNum == i? "active":"";
+			str += "<li class = 'page-item " + active + "'><a class = 'page-link' href='"+i+"'>"+i+"</a></li>";
+			
+		}
+		if (next){
+			str+= "<li class = 'page-item'><a class = 'page-link' href = '"+(endNum + 1) + "'>Next</a></li>";
+		}
+		str += "</ul></div>";
+		console.log(str);
+		replyPageFooter.html(str);
+		
+	}
+	replyPageFooter.on("click", "li a", function(e){
+		e.preventDefault();
+		console.log("page click");
+		let targetPageNum = $(this).attr("href");
+		console.log("targetPageNum : " + targetPageNum);
+		pageNum = targetPageNum;
+		showList(pageNum);
+	});
 });	
 </script>
 

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import kr.kjy.mapper.ReplyMapper;
 import kr.kjy.model.Criteria;
+import kr.kjy.model.ReplyPageDTO;
 import kr.kjy.model.ReplyVO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -49,6 +50,11 @@ public class ReplyServiceImpl implements ReplyService {
 	public List<ReplyVO> getList(Criteria cri, Long bno) {
 		log.info("getList......." + cri + "/" + bno);
 		return mapper.getListWithPaging(cri, bno);
+	}
+
+	@Override
+	public ReplyPageDTO getListPage(Criteria cri, Long bno) {
+		return new ReplyPageDTO(mapper.getCountByBno(bno), mapper.getListWithPaging(cri, bno));
 	}
 
 }

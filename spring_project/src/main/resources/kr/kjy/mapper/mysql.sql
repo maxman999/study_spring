@@ -22,9 +22,17 @@ create table tbl_reply(
 	replyupdatedate datetime DEFAULT CURRENT_TIMESTAMP not null,
 	FOREIGN KEY (bno) REFERENCES tbl_board (bno)
 );	
-	
-select * from tbl_reply
-	
+
+-- 인덱스 
+CREATE INDEX idx_reply ON tbl_reply (bno desc, rno asc);
+show index from tbl_reply
+
+select /*+INDEX(tbl_reply idx_reply)*/
+	bno,rno,reply,replyer,replydate,replyupdatedate
+	from tbl_reply
+	where bno = 2500
+	and rno > 0
+--
 	
 insert into tbl_board(title,content,writer)
 values('테스트 제목','테스트 내용','테스트 유저');
@@ -81,3 +89,9 @@ select *
 select * from tbl_reply where bno = 2500
 		
 select count(bno) from tbl_board
+
+
+select *
+from tbl_reply
+where bno = 2500
+LIMIT 0,10;

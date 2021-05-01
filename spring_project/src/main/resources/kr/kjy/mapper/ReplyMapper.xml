@@ -22,9 +22,12 @@
 		where rno = #{rno}
 	</update>
 	<select id="getListWithPaging" resultType="kr.kjy.model.ReplyVO">
-		select rno, bno, reply, replyer, replydate, replyupdatedate
+		select *
 		from tbl_reply
 		where bno = #{bno}
-		order by rno asc
+		limit #{cri.startNum}, #{cri.amount};
+	</select>
+	<select id="getCountByBno" resultType="int">
+		select count(rno) from tbl_reply where bno = #{bno}
 	</select>
 </mapper>
