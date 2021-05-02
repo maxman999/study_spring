@@ -17,7 +17,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-							<form action="/board/register" method = "post">
+							<form id = "registForm" action="/board/register" method = "post">
 								 <div class="form-group">	
 	                                  <label>Title</label>
 	                                  <input class="form-control" name = "title">
@@ -40,5 +40,145 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+            <!-- /.row  -->
+            <div class = "row">
+            	<div class = "col-lg-12">
+    				<div class = "panel panel-default">
+						<div class = "panel-heading">File Attach</div>
+						<!-- /.panel-heading  -->
+						<div class = "panel-body">
+							<div class = "form-group uploadDiv">
+								<input type ="file" name = "uploadFile" multiple>
+							</div>
+							<div class = "uploadResult">
+								<ul>
+								</ul>
+							</div>
+						</div>    				
+    				</div>        	
+            	</div>
+            </div>
+            <!-- /.row -->
           		  </div>
+          		  
+<script>
+$(document).ready(function(e){
+	var formObj = $("#registForm");
+	$("button[type = 'submit']").on("click", function(e){
+		e.preventDefault();
+		let str = "";
+		$(".uploadResult ul li").each(function(i, obj){
+			let jobj = $(obj);
+			str += "<input type = 'hidden' name = 'attachList["+i+"].filename' value = '" + jobj.data("filename") + "'>"
+			str += "<input type = 'hidden' name = 'attachList["+i+"].uuid' value = '" + jobj.data("uuid") + "'>"
+			str += "<input type = 'hidden' name = 'attachList["+i+"].uploadpath' value = '" + jobj.data("path") + "'>"
+			str += "<input type = 'hidden' name = 'attachList["+i+"].filetype' value = '" + jobj.data("type") + "'>"
+		});
+		formObj.append(str).submit();
+		
+	})
+	let regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+	let maxSize = 5242880; // 5MB
+	function checkExtention(fileName, fileSize){
+		if(fileSize >= maxSize){
+			alert("파일 사이즈 크기 초과");
+			return false;
+		}
+		if(regex.test(fileName)){
+			alert("해당 종류의 파일은 업로드할 수 없습니다.");
+			return false;
+		}
+		return true;
+	}
+	
+	let cloneObj = $(".uploadDiv").clone();
+	$("input[type='file']").change(function(e){
+		let formData = new FormData();
+		let inputFile = $("input[name='uploadFile']");
+		let files = inputFile[0].files;
+	
+		// add filedate to formdata
+		for(var i = 0; i < files.length; i++){
+			if(!checkExtention(files[i].name, files[i].size)){
+				return false
+			}
+			formData.append("uploadFile", files[i]);
+		}
+		$.ajax({
+			url : '/uploadAjaxAction',
+			processData : false, // false로 지정해줘야 전송이 됨!
+			contentType : false, // false로 지정해줘야 전송이 됨!
+			data : formData,
+			type : "POST",
+			dataType : 'json',
+			success : function(result){
+				console.log(result);
+ 				showUploadedFile(result);
+				$(".uploadDiv").html(cloneObj.html());
+			}
+		}); //$.ajax
+		
+	})
+	
+	let uploadResult = $(".uploadResult ul");
+	function showUploadedFile(uploadResultArr){
+		let str = "";
+		$(uploadResultArr).each(function(i, obj){
+			if(!obj.image){
+				console.log("! uploadPath : " + obj.uploadPath)
+				console.log("! uuid : " + obj.uuid)
+				console.log("! fileName : " + obj.fileName)
+				let fileCallPath = encodeURIComponent(obj.uploadPath +"/"+ obj.uuid + "_" + obj.fileName);
+				str += "<li data-path ='"+obj.uploadPath+"' data-uuid ='"+obj.uuid+"' data-filename ='"+obj.fileName+"' data-type ='"+obj.image+"'><div>";
+				str += "<span>" +obj.fileName + "</span>";
+				str += "<button type = 'button' data-file = \'" + fileCallPath + "\' data-type = 'file' class = 'btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src = '/resources/img/attach.png'></a>";
+				str += "</li></div>"
+				 
+			/* 	str += "<li><a href='/download?fileName="+fileCallPath+"'>"+
+						"<img src = '/resources/img/attach.png'>" + obj.fileName + "</a>" +
+						"<span data-file = \'" + fileCallPath + "\' data-type = 'file'> x </span>" +
+						"</li>"; */
+			}else{
+				let fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+				// str += "<li>" + obj.fileName + "</li>";
+				let originPath = obj.uploadPath + "\\" + obj.uuid + "_" + obj.fileName;
+				originPath = originPath.replace(new RegExp(/\\/g),"/");
+				str += "<li data-path ='"+obj.uploadPath+"' data-uuid ='"+obj.uuid+"' data-filename ='"+obj.fileName+"' data-type ='"+obj.image+"' ><div>";
+				str += "<span>" +obj.fileName + "</span>";
+				str += "<button type = 'button' data-file =\'" + fileCallPath + "\' data-type = 'image' class = 'btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+				str += "<img src = '/display?fileName="+ fileCallPath + "'></a>";
+				str += "</li></div>"
+				
+				
+		/* 		
+				str += "<li><a href = \"javascript:showImage(\'"+originPath+"\')\">"+
+					   "<img src = '/display?fileName="+ fileCallPath + "'></a>"+
+					   "<span data-file =\'" + fileCallPath + "\' data-type = 'image'> x </span>"+"</li>"; */
+			}
+		});
+		uploadResult.append(str);
+	}
+	
+	$(".uploadResult").on("click", "button", function(e){
+		console.log("delete file");
+		
+		let targetFile = $(this).data("file");
+		let type = $(this).data("type");
+		let targetLi = $(this).closest("li");
+		
+		$.ajax({
+			url : '/deleteFile',
+			data : {fileName : targetFile, type:type},
+			dataType : 'text',
+			type : "POST",
+			success : function(result){
+				targetLi.remove();
+			}
+		})
+	});
+	
+})
+
+</script>
 <%@ include file="../includes/footer.jsp" %>

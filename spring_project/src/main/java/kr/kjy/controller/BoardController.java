@@ -42,10 +42,14 @@ public class BoardController {
 	
 	@PostMapping("/register")
 	public String resister(BoardVO vo, RedirectAttributes rttr) {
+		System.out.println("여긴오니?");
 		log.info("board : " + vo);
+		if(vo.getAttachList() != null) {
+			System.out.println("첨부 했을 때");
+			vo.getAttachList().forEach(attach -> System.out.println(attach));
+		}
 		service.register(vo);
 		Long bno = vo.getBno();
-		log.info("BNO : " + bno);
 		rttr.addFlashAttribute("result", bno);
 		return "redirect:/board/list"; 
 	}

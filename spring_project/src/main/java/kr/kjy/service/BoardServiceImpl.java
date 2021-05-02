@@ -2,25 +2,40 @@ package kr.kjy.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import kr.kjy.mapper.BoardAttachMapper;
 import kr.kjy.mapper.BoardMapper;
 import kr.kjy.model.BoardVO;
 import kr.kjy.model.Criteria;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j;
 
 @Service
-@RequiredArgsConstructor
 @ToString
 public class BoardServiceImpl implements BoardService {
 	
-	private final BoardMapper mapper;
-
+	@Setter(onMethod_ = @Autowired)
+	private BoardMapper mapper;
+	@Setter(onMethod_ = @Autowired)
+	private BoardAttachMapper attachMapper;
+	
+	
+	@Transactional
 	@Override
 	public void register(BoardVO vo) {
 		mapper.BoardInsertSelectKey(vo);
+		if(vo.getAttachList() == null || vo.getAttachList().size() <= 0) {
+			return;
+		}
+		vo.getAttachList().forEach(attach ->{
+			attach.setBno(vo.getBno());
+			attachMapper.insert(attach);
+		});
 	}
 
 	@Override

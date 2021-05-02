@@ -11,7 +11,6 @@ create table tbl_board(
 	regdate datetime DEFAULT CURRENT_TIMESTAMP not null,
 	updatedate datetime DEFAULT CURRENT_TIMESTAMP not null
 	);
-
 	
 create table tbl_reply(
 	rno int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -23,7 +22,20 @@ create table tbl_reply(
 	FOREIGN KEY (bno) REFERENCES tbl_board (bno)
 );	
 
+create table tbl_attach(
+	uuid varchar(100) not null,
+	uploadpath varchar(200) not null,
+	filename varchar(100) not null,
+	filetype char(1) default 'I',
+	bno int(10)
+);
+
 alter table tbl_board add (replycnt int default 0);
+alter table tbl_attach add constraint pk_attach primary key(uuid);
+alter table tbl_attach add constraint fk_board_attach foreign key (bno) references tbl_board(bno);
+
+
+
 
 update tbl_board 
 set replycnt = (select count(rno) from tbl_reply where tbl_reply.bno = tbl_board.bno);
@@ -86,3 +98,6 @@ select *
 create table tbl_sample1( col1 varchar(500));
 create table tbl_sample2( col2 varchar(50));
 drop table tbl_sample2
+--
+
+select * from tbl_attach

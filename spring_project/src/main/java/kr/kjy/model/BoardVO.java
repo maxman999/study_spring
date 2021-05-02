@@ -1,6 +1,7 @@
 package kr.kjy.model;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -11,4 +12,5 @@ public class BoardVO {
 	private String title, content, writer;
 	private Date regdate, updatedate;
 	private int replycnt;
+	private List<BoardAttachVO> attachList;
 }
