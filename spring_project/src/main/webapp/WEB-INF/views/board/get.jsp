@@ -85,6 +85,7 @@
 				<div class = 'bigPicture'>
 				</div>
 			</div> <!-- /. bigPictureWrapper  -->
+			<!-- 첨부파일  -->
 			<div class = "row">
 				<div class = "col-lg-12">
 					<div class = "panel panel-default">
@@ -101,8 +102,6 @@
 				<!-- /. end panel  -->
 			</div> 
 			<!-- /.row  -->
-			
-			
 			
 				<!-- ./ end row  -->
           		  </div>

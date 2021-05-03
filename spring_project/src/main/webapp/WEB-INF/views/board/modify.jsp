@@ -49,6 +49,28 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+            <div class = 'bigPictureWrapper'>
+				<div class = 'bigPicture'>
+				</div>
+			</div> <!-- /. bigPictureWrapper  -->
+            <!-- 첨부파일  -->
+			<div class = "row">
+				<div class = "col-lg-12">
+					<div class = "panel panel-default">
+						<div class = "panel-heading">Files</div>
+							<!-- /. panel-heading  -->
+							<div class = "panel-body">
+								<div class = 'form-group uploadDiv'>
+									<input type = "file" name = "uploadFile" multiple="multiple">
+								</div>
+								<div class = 'uploadResult'>
+									<ul></ul>
+								</div>
+							</div>
+					</div>
+				</div>
+				<!-- /. end panel  -->
+			</div> 
           		  </div>
           		  
 <script>
@@ -67,7 +89,43 @@ $(document).ready(function(){
 		}else if(operation === 'modify'){
 			formObj.attr("action", "/board/modify").attr("method", "post")
 			formObj.submit();}
-		})});
+		})
+});
 </script>          		  
-
+<script>
+$(document).ready(function(){
+	(function(){
+		let bno = '<c:out value = "${board.bno}"/>';
+		$.getJSON("/board/getAttachList", {bno:bno}, function(arr){
+			console.log(arr);
+			let str = "";
+			$(arr).each(function(i, attach){
+				if(!attach.filetype){
+					str += "<li data-path ='"+attach.uploadpath+"' data-uuid ='"+attach.uuid+"' data-filename ='"+attach.filename+"' data-type ='"+attach.filetype+"'><div>";
+					str += "<span>" +attach.filename + "</span>";
+					str += "<button type = 'button' data-file=\'"+fileCallPath+"\'data-type='file' class = 'btn btn-warning btn-circle'><i class = 'fa fa-times'></i></button><br>"
+					str += "<img src = '/resources/img/attach.png'></a>";
+					str += "</div></li>"
+				//image type
+				}else{
+					let fileCallPath = encodeURIComponent(attach.uploadpath + "/s_" + attach.uuid + "_" + attach.filename);
+					str += "<li data-path ='"+attach.uploadpath+"' data-uuid ='"+attach.uuid+"' data-filename ='"+attach.filename+"' data-type ='"+attach.filetype+"' ><div>";
+					str += "<button type = 'button' data-file=\'"+fileCallPath+"\'data-type='image' class = 'btn btn-warning btn-circle'><i class = 'fa fa-times'></i></button><br>"; 
+					str += "<img src = '/display?fileName="+ fileCallPath + "'></a>";
+					str += "</li></div>"
+				}
+			});
+			$(".uploadResult ul").html(str);
+		});
+	})();
+	
+	$(".uploadResult").on("click", "button", function(e){
+		console.log("delete file");
+		if(confirm("Remove this file?")){
+			let targetLi = $(this).closest("li");
+			targetLi.remove();
+		}
+	})
+});
+</script>    
 <%@ include file="../includes/footer.jsp" %>

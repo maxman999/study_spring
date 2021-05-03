@@ -48,9 +48,11 @@ public class BoardServiceImpl implements BoardService {
 	public int modify(BoardVO vo) {
 		return mapper.BoardUpdate(vo);
 	}
-
+	
+	@Transactional
 	@Override
 	public int remove(Long bno) {
+		attachMapper.deleteAll(bno);
 		return mapper.BoardDelete(bno);
 	}
 

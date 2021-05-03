@@ -1,5 +1,7 @@
 package kr.kjy.model;
 
+import org.springframework.web.util.UriComponentsBuilder;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,5 +33,17 @@ public class Criteria {
 	public String[] getTypeArr() {
 		return type == null? new String[] {} : type.split("");
 	}
+	
+	public String getListLink() {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("")
+				.queryParam("startNum", this.startNum)
+				.queryParam("amount", this.amount)
+				.queryParam("pageNum", this.pageNum)
+				.queryParam("type", this.type)
+				.queryParam("keyword", this.keyword);
+		return builder.toUriString();
+	}
+	
+	
 	
 }
