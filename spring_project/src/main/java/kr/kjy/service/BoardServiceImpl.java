@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.kjy.mapper.BoardAttachMapper;
 import kr.kjy.mapper.BoardMapper;
+import kr.kjy.model.BoardAttachVO;
 import kr.kjy.model.BoardVO;
 import kr.kjy.model.Criteria;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +67,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int getTotal(Criteria cri) {
 		return mapper.getTotalCount(cri);
+	}
+
+	@Override
+	public List<BoardAttachVO> getAttachList(Long bno) {
+		return attachMapper.findByBno(bno);
 	}
 	
 }

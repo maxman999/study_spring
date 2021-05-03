@@ -65,10 +65,10 @@
         	                	<li class = "left clearfix" data-rno = '12'>
         	                		<div>
         	                			<div class = "header">
-        	                				<strong class = "primary-font">user00</strong>
-        	                				<small class = "pull-right text-muted">2018-01-01</small>     			
+        	                				<strong class = "primary-font">--------</strong>
+        	                				<small class = "pull-right text-muted">---------</small>     			
         	                			</div>
-        	                			<p>Good Job!</p>
+        	                			<p>처음으로 댓글을 등록해보세요!</p>
         	                		</div>
         	                	</li>
         	                	<!-- end reply  -->
@@ -77,14 +77,35 @@
             			</div>
             			<!-- /.pannel .chat-pannel -->
             			<div class = "panel-footer">
-            			
             			</div>
             		</div>
 				</div>
 			</div>
+			<div class = 'bigPictureWrapper'>
+				<div class = 'bigPicture'>
+				</div>
+			</div> <!-- /. bigPictureWrapper  -->
+			<div class = "row">
+				<div class = "col-lg-12">
+					<div class = "panel panel-default">
+						<div class = "panel-heading">Files</div>
+							<!-- /. panel-heading  -->
+							<div class = "panel-body">
+								<div class = "uploadResult">
+									<ul>
+									</ul>
+								</div>
+							</div>
+					</div>
+				</div>
+				<!-- /. end panel  -->
+			</div> 
+			<!-- /.row  -->
+			
+			
+			
 				<!-- ./ end row  -->
           		  </div>
-
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -219,9 +240,6 @@ $(document).ready(function(){
 				showList(pageNum);
 			});
 		});
-		
-		
-		
 	});
 	
 	var pageNum = 1;
@@ -264,6 +282,54 @@ $(document).ready(function(){
 		console.log("targetPageNum : " + targetPageNum);
 		pageNum = targetPageNum;
 		showList(pageNum);
+	});
+	
+	(function(){
+		let bno = '<c:out value = "${board.bno}"/>';
+		$.getJSON("/board/getAttachList", {bno:bno}, function(arr){
+			console.log(arr);
+			let str = "";
+			$(arr).each(function(i, attach){
+				if(!attach.filetype){
+					str += "<li data-path ='"+attach.uploadpath+"' data-uuid ='"+attach.uuid+"' data-filename ='"+attach.filename+"' data-type ='"+attach.filetype+"'><div>";
+					str += "<span>" +attach.filename + "</span>";
+					str += "<img src = '/resources/img/attach.png'></a>";
+					str += "</div></li>"
+				//image type
+				}else{
+					let fileCallPath = encodeURIComponent(attach.uploadpath + "/s_" + attach.uuid + "_" + attach.filename);
+					str += "<li data-path ='"+attach.uploadpath+"' data-uuid ='"+attach.uuid+"' data-filename ='"+attach.filename+"' data-type ='"+attach.filetype+"' ><div>";
+					str += "<img src = '/display?fileName="+ fileCallPath + "'></a>";
+					str += "</li></div>"
+				}
+			});
+			$(".uploadResult ul").html(str);
+		});
+	})();
+	
+	$(".uploadResult").on("click", "li", function(e){
+		console.log("view image");
+		let liObj = $(this);
+		let path = encodeURIComponent(liObj.data("path")+"/"+liObj.data("uuid")+"_"+liObj.data("filename"));
+		if(liObj.data("type")){
+			showImage(path.replace(new RegExp(/\\/g),"/"));
+		}else{
+			//download
+			self.location = "/download?fileName="+path
+		}
+	});
+	
+	function showImage(fileCallPath){
+		$(".bigPictureWrapper").css("display", "flex").show();
+		$(".bigPicture")
+			.html("<img src = '/display?fileName="+fileCallPath+"'>")
+			.animate({width:'100%', height : '100%'}, 1000) 
+	}
+	$(".bigPictureWrapper").on("click", function(e){
+		$(".bigPicture").animate({width: "0%", height: "0%"}, 1000);
+		setTimeout(()=>{
+			$(this).hide();
+		},1000);
 	});
 });	
 </script>

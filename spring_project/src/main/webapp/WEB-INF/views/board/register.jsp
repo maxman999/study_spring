@@ -133,7 +133,7 @@ $(document).ready(function(e){
 				str += "<span>" +obj.fileName + "</span>";
 				str += "<button type = 'button' data-file = \'" + fileCallPath + "\' data-type = 'file' class = 'btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
 				str += "<img src = '/resources/img/attach.png'></a>";
-				str += "</li></div>"
+				str += "</div></li>"
 				 
 			/* 	str += "<li><a href='/download?fileName="+fileCallPath+"'>"+
 						"<img src = '/resources/img/attach.png'>" + obj.fileName + "</a>" +

@@ -1,5 +1,10 @@
 package kr.kjy.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,8 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.kjy.model.BoardAttachVO;
 import kr.kjy.model.BoardVO;
 import kr.kjy.model.Criteria;
 import kr.kjy.model.PageDTO;
@@ -42,10 +49,8 @@ public class BoardController {
 	
 	@PostMapping("/register")
 	public String resister(BoardVO vo, RedirectAttributes rttr) {
-		System.out.println("여긴오니?");
 		log.info("board : " + vo);
 		if(vo.getAttachList() != null) {
-			System.out.println("첨부 했을 때");
 			vo.getAttachList().forEach(attach -> System.out.println(attach));
 		}
 		service.register(vo);
@@ -82,6 +87,12 @@ public class BoardController {
 		return "redirect:/board/list"; 
 	}
 	
+	@GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno){
+		System.out.println("attachList");
+		return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
+	}
 	
 	
 }
