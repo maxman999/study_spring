@@ -17,4 +17,7 @@
 	<delete id="deleteAll">
 		delete from tbl_attach where bno = #{bno}
 	</delete>
+	<select id="getOldFiles"  resultType="kr.kjy.model.BoardAttachVO">
+		select * from tbl_attach where uploadpath = DATE_FORMAT(date_add(now(), interval -1 day), '%Y\%m\%d')
+	</select>
 </mapper>

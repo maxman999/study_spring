@@ -48,7 +48,7 @@
 						<!-- /.panel-heading  -->
 						<div class = "panel-body">
 							<div class = "form-group uploadDiv">
-								<input type ="file" name = "uploadFile" multiple>
+								<input id = "inputFile" type ="file" name = "uploadFile" multiple>
 							</div>
 							<div class = "uploadResult">
 								<ul>
@@ -91,12 +91,13 @@ $(document).ready(function(e){
 		return true;
 	}
 	
-	let cloneObj = $(".uploadDiv").clone();
-	$("input[type='file']").change(function(e){
+	var cloneObj = $("#inputFile").clone(true);
+	
+	$("input[type='file']").on("change",function(e){
 		let formData = new FormData();
 		let inputFile = $("input[name='uploadFile']");
 		let files = inputFile[0].files;
-	
+		
 		// add filedate to formdata
 		for(var i = 0; i < files.length; i++){
 			if(!checkExtention(files[i].name, files[i].size)){
@@ -114,31 +115,22 @@ $(document).ready(function(e){
 			success : function(result){
 				console.log(result);
  				showUploadedFile(result);
-				$(".uploadDiv").html(cloneObj.html());
+				$("#inputFile").html(cloneObj.html());
 			}
 		}); //$.ajax
-		
-	})
+	});
 	
 	let uploadResult = $(".uploadResult ul");
 	function showUploadedFile(uploadResultArr){
 		let str = "";
 		$(uploadResultArr).each(function(i, obj){
 			if(!obj.image){
-				console.log("! uploadPath : " + obj.uploadPath)
-				console.log("! uuid : " + obj.uuid)
-				console.log("! fileName : " + obj.fileName)
 				let fileCallPath = encodeURIComponent(obj.uploadPath +"/"+ obj.uuid + "_" + obj.fileName);
 				str += "<li data-path ='"+obj.uploadPath+"' data-uuid ='"+obj.uuid+"' data-filename ='"+obj.fileName+"' data-type ='"+obj.image+"'><div>";
 				str += "<span>" +obj.fileName + "</span>";
 				str += "<button type = 'button' data-file = \'" + fileCallPath + "\' data-type = 'file' class = 'btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
 				str += "<img src = '/resources/img/attach.png'></a>";
 				str += "</div></li>"
-				 
-			/* 	str += "<li><a href='/download?fileName="+fileCallPath+"'>"+
-						"<img src = '/resources/img/attach.png'>" + obj.fileName + "</a>" +
-						"<span data-file = \'" + fileCallPath + "\' data-type = 'file'> x </span>" +
-						"</li>"; */
 			}else{
 				let fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
 				// str += "<li>" + obj.fileName + "</li>";
@@ -149,12 +141,6 @@ $(document).ready(function(e){
 				str += "<button type = 'button' data-file =\'" + fileCallPath + "\' data-type = 'image' class = 'btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
 				str += "<img src = '/display?fileName="+ fileCallPath + "'></a>";
 				str += "</li></div>"
-				
-				
-		/* 		
-				str += "<li><a href = \"javascript:showImage(\'"+originPath+"\')\">"+
-					   "<img src = '/display?fileName="+ fileCallPath + "'></a>"+
-					   "<span data-file =\'" + fileCallPath + "\' data-type = 'image'> x </span>"+"</li>"; */
 			}
 		});
 		uploadResult.append(str);

@@ -70,8 +70,8 @@ public class BoardController {
 	
 	@PostMapping("/modify")
 	public String modify(BoardVO vo, Criteria cri, RedirectAttributes rttr) {
-		int cnt = service.modify(vo);
-		if(cnt == 1) {
+		
+		if(service.modify(vo)) {
 			rttr.addFlashAttribute("result", "success");
 		}
 		rttr.addAttribute("pageNum", cri.getPageNum());
@@ -113,8 +113,6 @@ public class BoardController {
 			} catch (Exception e) {
 				log.error("delete file error : " + e.getMessage());
 			}
-			
-			
 		});
 	}
 	

@@ -44,9 +44,18 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.BoardRead(bno);
 	}
 
+	@Transactional
 	@Override
-	public int modify(BoardVO vo) {
-		return mapper.BoardUpdate(vo);
+	public boolean modify(BoardVO vo) {
+		attachMapper.deleteAll(vo.getBno());
+		boolean modifyResult = mapper.BoardUpdate(vo) == 1;
+		if(modifyResult && vo.getAttachList() != null && vo.getAttachList().size() > 0) {
+			vo.getAttachList().forEach(attach -> {
+				attach.setBno(vo.getBno());
+				attachMapper.insert(attach);
+			});
+		}
+		return modifyResult;
 	}
 	
 	@Transactional

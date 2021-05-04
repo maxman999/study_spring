@@ -59,6 +59,7 @@ public class UploadController {
 			}
 		}
 	}
+	
 	// Ajax를 이용한 파일 업로드
 	@GetMapping("/uploadAjax")
 	public void uploadAjax() {

@@ -101,3 +101,5 @@ drop table tbl_sample2
 --
 
 select * from tbl_attach
+select * from tbl_attach where uploadpath = DATE_FORMAT(date_add(now(), interval -1 day), '%Y\%m\%d')
+select * from tbl_attach where uploadpath = DATE_FORMAT(now(), '%Y\%m\%d')
