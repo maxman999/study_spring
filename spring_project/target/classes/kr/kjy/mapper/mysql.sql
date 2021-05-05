@@ -2,6 +2,7 @@ select sysdate();
 
 drop table tbl_board
 drop table tbl_reply
+drop table tbl_attach
 
 create table tbl_board(
 	bno int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -33,6 +34,45 @@ create table tbl_attach(
 alter table tbl_board add (replycnt int default 0);
 alter table tbl_attach add constraint pk_attach primary key(uuid);
 alter table tbl_attach add constraint fk_board_attach foreign key (bno) references tbl_board(bno);
+
+create table tbl_member(
+	userid varchar(50) not null primary key,
+	userpw varchar(100) not null,
+	username varchar(100) not null,
+	regdate datetime default CURRENT_TIMESTAMP not null,
+	updatedate datetime default CURRENT_TIMESTAMP not null,
+	enabled char(1) default '1'
+);
+
+create table tbl_member_auth(
+	userid varchar(50) not null,
+	auth varchar(50) not null,
+	constraint fk_member_auth foreign key(userid) references tbl_member(userid)
+);
+
+
+
+
+-- 스프링 시큐리티의 지정된 테이블을 생성하는 SQL
+drop table users
+drop table authorities
+ALTER TABLE authorities DROP INDEX ix_auth_username;
+
+create table users(
+	username varchar(50) not null primary key,
+	password varchar(50) not null,
+	enabled char(1) default '1'
+	);
+
+create table authorities(
+	username varchar(50) not null,
+	authority varchar(50) not null,
+	constraint fk_authorities_users foreign key(username) references users(username)	
+	);
+
+create unique index ix_auth_username on authorities (username, authority);
+
+--
 
 
 
@@ -103,3 +143,28 @@ drop table tbl_sample2
 select * from tbl_attach
 select * from tbl_attach where uploadpath = DATE_FORMAT(date_add(now(), interval -1 day), '%Y\%m\%d')
 select * from tbl_attach where uploadpath = DATE_FORMAT(now(), '%Y\%m\%d')
+
+
+insert into users (username, password) values ('user00', 'pw00');
+insert into users (username, password) values ('member00', 'pw00');
+insert into users (username, password) values ('admin00', 'pw00');
+
+insert into authorities(username, authority) values ('user00', 'ROLE_USER');
+insert into authorities(username, authority) values ('member00', 'ROLE_MANAGER');
+insert into authorities(username, authority) values ('admin00', 'ROLE_MANAGER');
+insert into authorities(username, authority) values ('admin00', 'ROLE_ADMIN');
+
+
+select * from tbl_member;
+select * from tbl_member_auth;
+
+
+-- users-by-username-query
+select userid username, userpw password, enabled
+from tbl_member
+where userid = 'admin90';
+-- authorities-by-username-query
+select userid username, auth authority
+from tbl_member_auth
+where userid = 'admin90';
+
