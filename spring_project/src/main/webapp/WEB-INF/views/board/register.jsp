@@ -18,6 +18,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
 							<form id = "registForm" action="/board/register" method = "post">
+								 <input type = "hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}" />
 								 <div class="form-group">	
 	                                  <label>Title</label>
 	                                  <input class="form-control" name = "title">
@@ -28,7 +29,7 @@
                                  </div>
                                  <div class="form-group">
                                  	<label>Writer</label>
-                                 	<input class="form-control" name = "writer">
+                                 	<input class="form-control" name = "writer" value = '<sec:authentication property="principal.username"/>' readonly="readonly" >
                                  </div>
                                  	<button type="submit" class="btn btn-default">Submit Button</button>
                                     <button type="reset" class="btn btn-default">Reset Button</button>
@@ -91,8 +92,10 @@ $(document).ready(function(e){
 		return true;
 	}
 	
-	var cloneObj = $("#inputFile").clone(true);
+	let csrfHeaderName = "${_csrf.headerName}";
+	let csrfTokenValue = "${_csrf.token}";
 	
+	let cloneObj = $("#inputFile").clone(true);
 	$("input[type='file']").on("change",function(e){
 		let formData = new FormData();
 		let inputFile = $("input[name='uploadFile']");
@@ -109,6 +112,10 @@ $(document).ready(function(e){
 			url : '/uploadAjaxAction',
 			processData : false, // false로 지정해줘야 전송이 됨!
 			contentType : false, // false로 지정해줘야 전송이 됨!
+			// 스프링 시큐리티 적용 후 ajax에서 post 전송을 위한 처리
+			beforeSend : function(xhr){
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+			},
 			data : formData,
 			type : "POST",
 			dataType : 'json',
@@ -156,6 +163,9 @@ $(document).ready(function(e){
 		$.ajax({
 			url : '/deleteFile',
 			data : {fileName : targetFile, type:type},
+			beforeSend : function(xhr){
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+			},
 			dataType : 'text',
 			type : "POST",
 			success : function(result){

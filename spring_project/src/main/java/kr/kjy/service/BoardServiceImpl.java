@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.kjy.mapper.BoardAttachMapper;
 import kr.kjy.mapper.BoardMapper;
+import kr.kjy.mapper.ReplyMapper;
 import kr.kjy.model.BoardAttachVO;
 import kr.kjy.model.BoardVO;
 import kr.kjy.model.Criteria;
@@ -24,7 +25,8 @@ public class BoardServiceImpl implements BoardService {
 	private BoardMapper mapper;
 	@Setter(onMethod_ = @Autowired)
 	private BoardAttachMapper attachMapper;
-	
+	@Setter(onMethod_ = @Autowired)
+	private ReplyMapper replyMapper;
 	
 	@Transactional
 	@Override
@@ -61,6 +63,7 @@ public class BoardServiceImpl implements BoardService {
 	@Transactional
 	@Override
 	public int remove(Long bno) {
+		replyMapper.deleteAll(bno);
 		attachMapper.deleteAll(bno);
 		return mapper.BoardDelete(bno);
 	}

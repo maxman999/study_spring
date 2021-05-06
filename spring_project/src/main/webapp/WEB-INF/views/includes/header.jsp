@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -263,8 +263,12 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
+                        <sec:authorize access="isAuthenticated()">
+                        <li><a href="/common/customLogout"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                        </sec:authorize>
+                        <sec:authorize access="isAnonymous()">
+                        <li><a href="/common/customLogin"><i class="fa fa-sign-in fa-fw"></i> LogIn</a></li>
+                        </sec:authorize>
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>

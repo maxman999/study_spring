@@ -74,8 +74,14 @@ create unique index ix_auth_username on authorities (username, authority);
 
 --
 
-
-
+-- remember me table
+create table persistent_logins(
+username varchar(64) not null,
+series varchar(64) primary key,
+token varchar(64) not null,
+last_used timestamp not null
+);
+--
 
 update tbl_board 
 set replycnt = (select count(rno) from tbl_reply where tbl_reply.bno = tbl_board.bno);
@@ -145,26 +151,19 @@ select * from tbl_attach where uploadpath = DATE_FORMAT(date_add(now(), interval
 select * from tbl_attach where uploadpath = DATE_FORMAT(now(), '%Y\%m\%d')
 
 
-insert into users (username, password) values ('user00', 'pw00');
-insert into users (username, password) values ('member00', 'pw00');
-insert into users (username, password) values ('admin00', 'pw00');
-
-insert into authorities(username, authority) values ('user00', 'ROLE_USER');
-insert into authorities(username, authority) values ('member00', 'ROLE_MANAGER');
-insert into authorities(username, authority) values ('admin00', 'ROLE_MANAGER');
-insert into authorities(username, authority) values ('admin00', 'ROLE_ADMIN');
-
-
-select * from tbl_member;
-select * from tbl_member_auth;
-
-
 -- users-by-username-query
-select userid username, userpw password, enabled
-from tbl_member
-where userid = 'admin90';
+select userid username, userpw password, enabled from tbl_member where userid = 'admin90';
 -- authorities-by-username-query
-select userid username, auth authority
-from tbl_member_auth
-where userid = 'admin90';
+select userid username, auth authority from tbl_member_auth where userid = 'admin90';
 
+
+
+select * from tbl_member
+
+
+select mem.userid, userpw, enabled, regdate, updatedate, auth
+from tbl_member mem left outer join tbl_member_auth auth on mem.userid = auth.userid
+where mem.userid = 'user1';
+
+select * from persistent_logins
+select * from tbl_member_auth

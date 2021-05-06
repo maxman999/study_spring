@@ -20,7 +20,8 @@
                         	<form>
 	                       		<input type="hidden" name = 'pageNum' value = "${cri.pageNum}">  	
 	                        	<input type="hidden" name = 'amount' value = "${cri.amount}"> 
-	                        	<input type="hidden" name = 'startNum' value = "${cri.startNum}">  
+	                        	<input type="hidden" name = 'startNum' value = "${cri.startNum}">
+	                        	<input type = "hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}" />
 	                      		<div class="form-group">	
 	                               <label>BNO</label>
 	                               <input class="form-control" name = "bno" readonly = "readonly" value = '<c:out value = "${board.bno}" />'>
@@ -38,8 +39,13 @@
 	                              	<input class="form-control" name = "writer" readonly = "readonly" value='<c:out value = "${board.writer}" />'>
 	                            </div>
 	                            	<!-- data-oper : 커스텀 데이터 속성  -->
+	                            	<sec:authentication property="principal" var = "pinfo"/>
+                                	<sec:authorize access="isAuthenticated()">
+                                	<c:if test="${pinfo.username eq board.writer}">
 	                               	<button class="btn btn-default" data-oper = 'modify'>Modify</button>
 	                                <button class="btn btn-danger" data-oper = 'remove'>Remove</button>
+	                        		</c:if>
+	                        		</sec:authorize>
 	                        		<button class="btn btn-info" data-oper = 'list'>List</button>
                         	</form>
                         </div>
@@ -110,6 +116,7 @@ $(document).ready(function(){
 			let str = "";
 			$(arr).each(function(i, attach){
 				if(!attach.filetype){
+					let fileCallPath = encodeURIComponent(attach.uploadPath +"/"+ attach.uuid + "_" + attach.fileName);
 					str += "<li data-path ='"+attach.uploadpath+"' data-uuid ='"+attach.uuid+"' data-filename ='"+attach.filename+"' data-type ='"+attach.filetype+"'><div>";
 					str += "<span>" +attach.filename + "</span>";
 					str += "<button type = 'button' data-file=\'"+fileCallPath+"\'data-type='file' class = 'btn btn-warning btn-circle'><i class = 'fa fa-times'></i></button><br>"
@@ -149,6 +156,8 @@ $(document).ready(function(){
 		return true;
 	}
 	
+	let csrfHeaderName = "${_csrf.headerName}";
+	let csrfTokenValue = "${_csrf.token}";
 	let cloneObj = $("#inputFile").clone();
 	$("input[type='file']").change(function(e){
 		let formData = new FormData();
@@ -166,6 +175,9 @@ $(document).ready(function(){
 			url : '/uploadAjaxAction',
 			processData : false, // false로 지정해줘야 전송이 됨!
 			contentType : false, // false로 지정해줘야 전송이 됨!
+			beforeSend : function(xhr){
+			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+			},
 			data : formData,
 			type : "POST",
 			dataType : 'json',

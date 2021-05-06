@@ -6,29 +6,32 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 <bean id = "customAccessDenied" class = "kr.kjy.security.CustomAccessDeniedHandler"></bean>
-<bean id = "customLoginSuccess" class = "kr.kjy.security.CustomLoginSuccessHandler"></bean>
+<!-- <bean id = "customLoginSuccess" class = "kr.kjy.security.CustomLoginSuccessHandler"></bean> -->
 <!-- <bean id = "customPasswordEncoder" class = "kr.kjy.security.CustomNoOpPasswordEncoder"></bean> -->
 <bean id = "bcryptPasswordEncoder" class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+<bean id = "customUserDetailsService" class = "kr.kjy.security.CustomUserDetailsService"></bean>
 
 <security:http auto-config="true" use-expressions="true">
 	<security:intercept-url pattern = "/common/all" access = "permitAll" />
-	<security:intercept-url pattern = "/common/member" access = "hasRole('ROLE_MEMBER')" />
 	<security:intercept-url pattern = "/common/admin" access = "hasRole('ROLE_ADMIN')" />
+	<security:intercept-url pattern = "/common/member" access = "hasRole('ROLE_MEMBER')" />
+	
 	<!-- <security:form-login /> -->
-	<security:form-login login-page="/common/customLogin" authentication-success-handler-ref="customLoginSuccess" />
-	<!-- <security:access-denied-handler error-page="/common/accessError" /> -->
+	<security:form-login login-page="/common/customLogin" /> <!-- 커스텀 설정 해줄 때 : authentication-success-handler-ref="customLoginSuccess"  -->
+	<security:access-denied-handler error-page="/common/accessError" />
 	<!-- <security:csrf disabled="true"/> -->
 	<security:access-denied-handler ref="customAccessDenied" />
-	<security:logout logout-url="/common/customLogout" invalidate-session="true" />
+	<security:logout logout-url="/common/customLogout" invalidate-session="true" delete-cookies="remember-me, JSSESSION_ID" />
+	<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 </security:http>
 
 
 <security:authentication-manager>
-	<security:authentication-provider>
-		<security:jdbc-user-service
+	<security:authentication-provider user-service-ref="customUserDetailsService">
+		<!-- <security:jdbc-user-service
 		data-source-ref="dataSource" 
 		users-by-username-query="select userid username, userpw password, enabled from tbl_member where userid = ?"
-		authorities-by-username-query="select userid username, auth authority from tbl_member_auth where userid = ?"/>
+		authorities-by-username-query="select userid username, auth authority from tbl_member_auth where userid = ?"/> -->
 		<security:password-encoder ref="bcryptPasswordEncoder" />
 		<!-- <security:password-encoder ref="customPasswordEncoder" /> -->
 		<!-- <security:user-service>
