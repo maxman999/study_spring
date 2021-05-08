@@ -359,7 +359,7 @@
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
-                            </div>
+                            </div>	
                         </a>
                     </div>
                 </div>
@@ -369,11 +369,23 @@
                 <div id = main-board class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-clock-o fa-fw"></i> Responsive Timeline
+                            <i class="fa fa-clock-o fa-fw"></i> News
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                        	
+                        	<table width="100%" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>description</th>
+                                        <th>originallink</th>
+                                        <th>pubDate</th>
+                                    </tr>
+                                </thead>
+                                <tbody class = news-table>
+                                	
+                                </tbody>
+                            </table>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -407,4 +419,34 @@
 
 </body>
 
+<script type="text/javascript">
+$(document).ready(function(){
+	let keyObj = {newsKeyword:"it"};
+	$.ajax({
+		type : 'get',
+		url : '/getNews',
+		contentType : "application/json; charset=utf-8",
+		data : keyObj,
+		success : function(result){
+			let news = JSON.parse(result).items;
+			console.log(news);
+			console.log(news[0].title);
+	 		let str = "";
+			for(var i = 0; i < news.length ; i++ ){
+				str += "<tr class='odd gradeX'>";
+				str += "<td>"+news[i].title+"</td>";
+				str += "<td>"+news[i].description+"</td>";
+				str += "<td>"+news[i].originallink+"</td>";
+				str += "<td>"+news[i].pubDate+"</td>";
+                str += "</tr>";
+				console.log(str);
+			}
+			$(".news-table").html(str);
+		},
+		error : function(e){
+			alert("통신 실패");
+		}
+	})
+});
+</script>
 </html>
