@@ -12,3 +12,11 @@
 #main-board {
     width: 100%;
 }
+
+#div-keyword {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+    margin: 20px 300px 10px 300px;
+}
+

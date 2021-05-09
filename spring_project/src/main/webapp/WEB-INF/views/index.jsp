@@ -18,16 +18,12 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="/resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- MetisMenu CSS -->
     <link href="/resources/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="/resources/dist/css/sb-admin-2.css" rel="stylesheet">
     <link href="/resources/dist/css/custom.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="/resources/vendor/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="/resources/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -370,8 +366,13 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-clock-o fa-fw"></i> News
-                        </div>
-                        <!-- /.panel-heading -->
+						</div>
+							<div id = "div-keyword" class="input-group">
+								<input id = "input-keyword" type="text" class="form-control"
+									aria-label="Amount (rounded to the nearest dollar)">
+									<span class="input-group-addon">검색</span>
+							</div>
+						<!-- /.panel-heading -->
                         <div class="panel-body">
                         	<table width="100%" class="table table-striped table-bordered table-hover">
                                 <thead>
@@ -409,11 +410,6 @@
     <!-- Metis Menu Plugin JavaScript -->
     <script src="/resources/vendor/metisMenu/metisMenu.min.js"></script>
 
-    <!-- Morris Charts JavaScript -->
-    <script src="/resources/vendor/raphael/raphael.min.js"></script>
-    <script src="/resources/vendor/morrisjs/morris.min.js"></script>
-    <script src="/resources/data/morris-data.js"></script>
-
     <!-- Custom Theme JavaScript -->
     <script src="/resources/dist/js/sb-admin-2.js"></script>
 
@@ -421,32 +417,59 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-	let keyObj = {newsKeyword:"it"};
+	let keyObj = {
+			newsKeyword : "인공지능"
+		};
 	$.ajax({
 		type : 'get',
 		url : '/getNews',
 		contentType : "application/json; charset=utf-8",
 		data : keyObj,
-		success : function(result){
+		success : function(result) {
 			let news = JSON.parse(result).items;
-			console.log(news);
-			console.log(news[0].title);
-	 		let str = "";
-			for(var i = 0; i < news.length ; i++ ){
+			let str = "";
+			for (var i = 0; i < news.length; i++) {
 				str += "<tr class='odd gradeX'>";
-				str += "<td>"+news[i].title+"</td>";
-				str += "<td>"+news[i].description+"</td>";
-				str += "<td>"+news[i].originallink+"</td>";
-				str += "<td>"+news[i].pubDate+"</td>";
-                str += "</tr>";
-				console.log(str);
+				str += "<td>" + news[i].title + "</td>";
+				str += "<td>" + news[i].description + "</td>";
+				str += "<td>" + news[i].originallink + "</td>";
+				str += "<td>" + news[i].pubDate + "</td>";
+				str += "</tr>";
 			}
 			$(".news-table").html(str);
 		},
-		error : function(e){
+		error : function(e) {
 			alert("통신 실패");
 		}
 	})
-});
+	$(".input-group-addon").on("click", function() {
+			let keyword = $("#input-keyword").val();
+			keyObj = {
+				newsKeyword : keyword
+			};
+			$.ajax({
+				type : 'get',
+				url : '/getNews',
+				contentType : "application/json; charset=utf-8",
+				data : keyObj,
+				success : function(result) {
+					let news = JSON.parse(result).items;
+					let str = "";
+					for (var i = 0; i < news.length; i++) {
+						str += "<tr class='odd gradeX'>";
+						str += "<td>" + news[i].title + "</td>";
+						str += "<td>" + news[i].description + "</td>";
+						str += "<td>" + news[i].originallink + "</td>";
+						str += "<td>" + news[i].pubDate + "</td>";
+						str += "</tr>";
+					}
+					$(".news-table").html(str);
+				},
+				error : function(e) {
+					alert("통신 실패");
+				}
+			})
+		});
+	});
 </script>
 </html>

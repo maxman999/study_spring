@@ -31,7 +31,6 @@
 		<beans:property name="maxInMemorySize" value="10485756"></beans:property>
 	</beans:bean>
 		
-	<context:component-scan base-package="kr.kjy.myapp" />
 	<context:component-scan base-package="kr.kjy.controller" />
 	
 	<security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"></security:global-method-security>

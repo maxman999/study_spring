@@ -50,12 +50,23 @@ create table tbl_member_auth(
 	constraint fk_member_auth foreign key(userid) references tbl_member(userid)
 );
 
+drop table tbl_scrap
+
+create table tbl_scrap(
+	sno int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	title varchar(100),
+	description varchar(700),
+	originallink varchar(200),
+	pubdate varchar(30)
+);
+
 
 
 
 -- 스프링 시큐리티의 지정된 테이블을 생성하는 SQL
 drop table users
 drop table authorities
+
 ALTER TABLE authorities DROP INDEX ix_auth_username;
 
 create table users(
@@ -157,13 +168,25 @@ select userid username, userpw password, enabled from tbl_member where userid = 
 select userid username, auth authority from tbl_member_auth where userid = 'admin90';
 
 
-
-select * from tbl_member
-
-
 select mem.userid, userpw, enabled, regdate, updatedate, auth
 from tbl_member mem left outer join tbl_member_auth auth on mem.userid = auth.userid
 where mem.userid = 'user1';
 
-select * from persistent_logins
-select * from tbl_member_auth
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
