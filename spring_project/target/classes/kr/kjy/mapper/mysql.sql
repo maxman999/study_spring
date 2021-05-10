@@ -54,13 +54,13 @@ drop table tbl_scrap
 
 create table tbl_scrap(
 	sno int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	title varchar(100),
-	description varchar(700),
-	originallink varchar(200),
-	pubdate varchar(30)
+	title varchar(100) not null,
+	description varchar(700) not null,
+	originallink varchar(200) not null,
+	pubdate varchar(70) not null
 );
 
-
+select * from tbl_scrap
 
 
 -- 스프링 시큐리티의 지정된 테이블을 생성하는 SQL
