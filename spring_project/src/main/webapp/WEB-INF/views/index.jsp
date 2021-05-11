@@ -381,12 +381,19 @@
                                         <th>description</th>
                                         <th>originallink</th>
                                         <th>pubDate</th>
+                                        <th>Scrap!</th>
                                     </tr>
                                 </thead>
                                 <tbody class = news-table>
                                 	
                                 </tbody>
                             </table>
+                            <form class = "scrapForm" action="" method = "post">
+                            	<input type = "hidden" name = "title">
+                            	<input type = "hidden" name = "description">
+                            	<input type = "hidden" name = "originallink">
+                            	<input type = "hidden" name = "pubDate">
+                            </form>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -429,17 +436,23 @@ $(document).ready(function(){
 			let news = JSON.parse(result).items;
 			let str = "";
 			for (var i = 0; i < news.length; i++) {
-				str += "<tr class='odd gradeX'>";
+				str += "<tr id = 'tr-scrap' class='odd gradeX' ";
+				str += " data-title = '"+news[i].title+"' ";
+				str += " data-description = '"+news[i].description+"' ";
+				str += " data-originallink = '"+news[i].originallink+"' ";
+				str += " data-pubDate = '"+news[i].pubDate+"' ";
+				str += ">";
 				str += "<td>" + news[i].title + "</td>";
 				str += "<td>" + news[i].description + "</td>";
 				str += "<td>" + news[i].originallink + "</td>";
 				str += "<td>" + news[i].pubDate + "</td>";
+				str += "<td><button class = 'btn btn-default'>scrap</button></td>";
 				str += "</tr>";
 			}
 			$(".news-table").html(str);
 		},
 		error : function(e) {
-			alert("통신 실패");
+			alert("통신 실패");	
 		}
 	})
 	$(".input-group-addon").on("click", function() {
@@ -456,11 +469,17 @@ $(document).ready(function(){
 					let news = JSON.parse(result).items;
 					let str = "";
 					for (var i = 0; i < news.length; i++) {
-						str += "<tr class='odd gradeX'>";
+						str += "<tr id = 'tr-scrap' class='odd gradeX' ";
+						str += "data-title = '"+news[i].title+"'";
+						str += " data-description = '"+news[i].description+"'";
+						str += " data-originallink = '"+news[i].originallink+"'";
+						str += " data-pubDate = '"+news[i].pubDate+"'";
+						str += ">";
 						str += "<td>" + news[i].title + "</td>";
 						str += "<td>" + news[i].description + "</td>";
 						str += "<td>" + news[i].originallink + "</td>";
 						str += "<td>" + news[i].pubDate + "</td>";
+						str += "<td><button class = 'btn btn-default'>scrap</button></td>";
 						str += "</tr>";
 					}
 					$(".news-table").html(str);
@@ -471,5 +490,22 @@ $(document).ready(function(){
 			})
 		});
 	});
+	
+$(document).ready(function(){
+	$(document).on("click", ".btn", function(){
+		let targetTr = $(this).parent().parent();
+		console.log(targetTr.data("title"));
+		console.log(targetTr.data("description"));
+		console.log(targetTr.data("originallink"));
+		console.log(targetTr.data("pubDate"));
+		
+		let scrapForm = $(".scrapForm");
+		scrapForm.find("input[name='title']").val(targetTr.data("title"));
+		scrapForm.find("input[name='description']").val(targetTr.data("description"));
+		scrapForm.find("input[name='originallink']").val(targetTr.data("originallink"));
+		scrapForm.find("input[name='pubDate']").val(targetTr.data("pubDate"));
+		/* scrapForm.submit(); */
+	});
+});
 </script>
 </html>
